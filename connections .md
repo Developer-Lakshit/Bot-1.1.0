@@ -39,32 +39,30 @@ This document outlines the wiring for the line follower bot based on the Arduino
 | | SDA | A4 | I2C Data |
 | **Indicator LED** | Anode (+) | D12 | "End Box" Indicator |
 | | Cathode (-) | GND (via 220Ω-330Ω resistor)| Current Limiting Resistor |
-| **Control Buttons**| **Output** | **A6** | **See "Analog Button Ladder" below** |
+| **Buttons** | **Next** | **A7** | **Scroll Menu Option (See below)** |
+| | **Select** | **A6** | **Confirm Selection (See below)** |
 
 ---
 
-## **SPECIAL: Analog Button Ladder (Connects to Pin A6)**
+## **NEW: Two-Button Wiring (Pins A6 & A7)**
 
-To save digital pins, we use three push-buttons connected to a single analog pin (A6) using a resistor network.
+We now use two separate buttons. Since Pins A6 and A7 on the Nano are **Analog Input Only** and do not have internal pull-up resistors, you **MUST** use external 10kΩ pull-down resistors.
 
 **Components Needed:**
-* 3x Push-to-on buttons (Up, Down, Select)
-* 1x 1kΩ Resistor
-* 1x 2.2kΩ Resistor
-* 1x 4.7kΩ Resistor
-* 1x 10kΩ Resistor (Pull-down)
+* 2x Push-to-on buttons (Next, Select)
+* 2x 10kΩ Resistors (Pull-down)
 
-**Wiring Diagram:**
-+5V
-   |
-   +-------[ Button UP ]-------[ 1kΩ ]-------+
-   |                                         |
-   +-------[ Button DOWN ]-----[ 2.2kΩ ]-----+
-   |                                         |
-   +-------[ Button SELECT ]---[ 4.7kΩ ]-----+
-                                             |
-                                             +------> To Arduino Pin A6
-                                             |
-                                         [ 10kΩ ]
-                                             |
-                                            GND
+**Wiring Logic (Active High):**
+* When the button is **OPEN** (unpressed), the resistor pulls the pin to **GND (0V)**.
+* When the button is **PRESSED**, it connects the pin to **5V**.
+
+**Diagram:**
+
+```text
+       [ Button NEXT ]                 [ Button SELECT ]
+       |             |                 |               |
+      5V            Pin A7            5V              Pin A6
+                     |                                 |
+                  [10kΩ Resistor]                   [10kΩ Resistor]
+                     |                                 |
+                    GND                               GND
